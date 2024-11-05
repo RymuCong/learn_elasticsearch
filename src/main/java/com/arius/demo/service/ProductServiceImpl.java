@@ -27,10 +27,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<EProduct> findAll() {
-        return productRepository.findAll().stream()
-                .map(ProductMapper::toEProduct)
-                .collect(Collectors.toList());
+    public List<Product> findAll() {
+        return productRepository.findAll();
     }
 
     @Override
