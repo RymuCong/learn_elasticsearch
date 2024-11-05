@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Product</title>
+</head>
+<body>
+
+<div th:fragment="ProductEdit">
+    <div class = "alert alert-warning" id="message"></div>
+
+    <script>
+        $(function () {
+            $("#message").hide();
+
+            $("#btnSave").click((function () {
+
+                var form = document.getElementById("editForm");
+
+                let productName = $('#productName').val();
+
+                let price = $('#price').val();
+
+                if (productName === '')
+                {
+                    $("#message").text("Phải nhập tên sản phẩm");
+                    $("#message").show();
+                }
+                else if (price === '')
+                {
+                    $("#message").text("Phải nhập giá bán");
+                    $("#message").show();
+                }
+                else
+                    form.submit();
+            }))
+        })
+    </script>
+
+    <div class="container">
+        <hr>
+
+        <p class = "h4 mb-4">Sửa sản phẩm</p>
+
+        <form action="#" th:action="@{/product/save}" th:object="${product}" id="editForm" method="post" enctype="multipart/form-data">
+            <!-- Add hidden form field to handle the update -->
+            <input type="hidden" th:field="*{id}">
+
+            <input type="text" id="productName" th:field="*{productName}" class="form-control mb-4 w-25"/>
+
+            <input type="number" th:field="*{price}" class="form-control mb-4 w-25"/>
+
+            <input type="text" th:field="*{country}" class="form-control mb-4 w-25"/>
+
+            <select th:field="*{category}" class="form-control mb-4 w-25">
+                <option value="">Chọn nhãn hàng</option>
+                <option th:each="tempCategory : ${categories}" th:value="${tempCategory.id}" th:text="${tempCategory.categoryName}"></option>
+            </select>
+
+            <button type="button" id="btnSave" class="btn btn-info col-2">Save</button>
+        </form>
+
+        <hr>
+        <a th:href="@{/product}">Quay về trang sản phẩm</a>
+    </div>
+
+</div>
+</body>
+</html>

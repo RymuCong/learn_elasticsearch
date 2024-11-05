@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang chủ</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+    <link th:rel="stylesheet" th:href="@{/webjars/font-awesome/5.15.4/css/all.css} "/>
+    <script th:src="@{/webjars/jquery/3.0.0/jquery.min.js}"></script>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-sm">
+            <!-- Links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Trang Chủ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/product">Sản Phẩm</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/category">Nhãn hàng</a>
+                </li>
+            </ul>
+        </nav>
+
+        <span th:text="${page}"></span>
+        <div th:if="${page == 'product_list'}">
+            <div th:replace="~{product_list.html::ProductList}"></div>
+        </div>
+        <div th:if="${page == 'categories_list'}">
+            <div th:replace="~{categories_list.html::CategoriesList}"></div>
+        </div>
+        <div th:if="${page == 'product-add'}">
+            <div th:replace="~{product_add.html::ProductAdd}"></div>
+        </div>
+        <div th:if="${page == 'product-edit'}">
+            <div th:replace="~{product_edit.html::ProductEdit}"></div>
+        </div>
+        <div th:if="${page == 'category-add'}">
+            <div th:replace="~{category_add.html::CategoryAdd}"></div>
+        </div>
+        <div th:if="${page == 'category-edit'}">
+            <div th:replace="~{category_edit.html::CategoryEdit}"></div>
+        </div>
+
+    </div>
+</body>

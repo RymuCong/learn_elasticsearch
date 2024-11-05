@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div th:fragment="CategoryEdit">
+    <div class = "alert alert-warning" id="message"></div>
+
+    <script>
+        $(function () {
+            $("#message").hide();
+
+            $("#btnSave").click((function () {
+
+                var form = document.getElementById("addForm");
+
+                let categoryName = $('#categoryName').val();
+
+                if (categoryName === '')
+                {
+                    $("#message").text("Phải nhập tên nhãn hàng");
+                    $("#message").show();
+                }
+                else
+                    form.submit();
+            }))
+        })
+    </script>
+
+    <div class="container">
+        <hr>
+        <p class = "h4 mb-4">Sửa nhãn hàng</p>
+
+        <form action="#" th:action="@{/category/save}" th:object="${category}" method="post" id="addForm" enctype="multipart/form-data">
+            <!-- Add hidden form field to handle the update -->
+            <input type="hidden" th:field="*{id}">
+
+            <input type="text" id="categoryName" th:field="*{categoryName}" class="form-control mb-4 w-25" placeholder="Tên nhãn hàng"/>
+
+            <input type="text" th:field="*{description}" class="form-control mb-4 w-25" placeholder="Mô tả"/>
+
+            <button type="button" id="btnSave" class="btn btn-info col-2">Save</button>
+        </form>
+
+        <hr>
+        <a th:href="@{/category}">Quay về trang nhãn hàng</a>
+    </div>
+
+</div>
+</body>
+</html>

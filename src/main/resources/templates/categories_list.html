@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List Categories</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+    <link th:rel="stylesheet" th:href="@{/webjars/font-awesome/5.15.4/css/all.css} "/>
+    <script th:src="@{/webjars/jquery/3.0.0/jquery.min.js}"></script>
+</head>
+<body>
+
+<div th:fragment="CategoriesList">
+    <h4>Danh sách nhãn hàng</h4>
+
+    <a th:href="@{/category/addForm}" class="btn btn-primary btn-sm mb-3">Thêm nhãn hàng</a>
+
+    <table class="table table-responsive table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên nhãn hàng</th>
+            <th>Mô tả</th>
+            <th colspan="2">Hành động</th>
+        </tr>
+        </thead>
+        <tr th:each="category : ${categories}" >
+            <td th:text="${category.id}">Id</td>
+            <td th:text="${category.categoryName}">Category name</td>
+            <td th:text="${category.description}">Mô tả</td>
+            <td><a th:href="${'/category/edit/' + category.id}">Sửa</a></td>
+            <td><a th:href="${'/category/delete/' + category.id}">Xóa</a></td>
+        </tr>
+    </table>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item" th:if="${currentPage > 0}">
+                <a class="page-link" th:href="@{/category(page=${currentPage - 1})}">Trước</a>
+            </li>
+            <li class="page-item" th:each="item : ${#numbers.sequence(0, totalPage - 1)}">
+                <a class="page-link" th:href="@{/category(page=${item})}" th:text="${item + 1}"></a>
+            </li>
+            <li class="page-item" th:if="${currentPage < totalPage - 1}">
+                <a class="page-link" th:href="@{/category(page=${currentPage + 1})}">Sau</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+</body>
+</html>
