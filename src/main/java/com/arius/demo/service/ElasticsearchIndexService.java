@@ -50,10 +50,10 @@ public class ElasticsearchIndexService {
         }
     }
 
-    public List<Product> searchProductsByName(String name) {
+    public List<EProduct> searchProductsByName(String name) {
         Criteria criteria = Criteria.where("name").contains(name);
         CriteriaQuery query = new CriteriaQuery(criteria);
-        SearchHits<Product> searchHits = elasticsearchOperations.search(query, Product.class, IndexCoordinates.of("product"));
+        SearchHits<EProduct> searchHits = elasticsearchOperations.search(query, EProduct.class, IndexCoordinates.of("product"));
         return searchHits.getSearchHits().stream()
                 .map(hit -> hit.getContent())
                 .collect(Collectors.toList());
