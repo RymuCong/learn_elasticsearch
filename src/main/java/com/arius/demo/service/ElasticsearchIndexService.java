@@ -3,6 +3,8 @@ package com.arius.demo.service;
 import com.arius.demo.dto.EProduct;
 import com.arius.demo.entity.Product;
 import com.arius.demo.mapper.ProductMapper;
+import com.arius.demo.repository.EProductRepository;
+import com.arius.demo.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.IndexOperations;
@@ -19,17 +21,17 @@ import java.util.stream.Collectors;
 @Service
 public class ElasticsearchIndexService {
 
-    private final ProductService productService;
+    private final ProductRepository productRepository;
     private final ElasticsearchOperations elasticsearchOperations;
 
     @Autowired
-    public ElasticsearchIndexService(ProductService productService, ElasticsearchOperations elasticsearchOperations) {
-        this.productService = productService;
+    public ElasticsearchIndexService(ProductRepository productRepository, ElasticsearchOperations elasticsearchOperations) {
+        this.productRepository = productRepository;
         this.elasticsearchOperations = elasticsearchOperations;
     }
 
     public void pushDataToElasticsearch() {
-        List<Product> products = productService.findAll();
+        List<Product> products = productRepository.findAll();
         List<EProduct> eProducts = products.stream()
                 .map(ProductMapper::toEProduct)
                 .toList();
@@ -38,16 +40,20 @@ public class ElasticsearchIndexService {
         IndexOperations indexOperations = elasticsearchOperations.indexOps(indexCoordinates);
 
         for (EProduct eProduct : eProducts) {
-            Document document = Document.create();
-            document.put("id", eProduct.getId());
-            document.put("name", eProduct.getProductName());
-            document.put("price", eProduct.getPrice());
-            document.put("country", eProduct.getCountry());
-            document.put("image", eProduct.getImage());
-            document.put("category", eProduct.getCategory());
-
-            elasticsearchOperations.save(document, indexCoordinates);
+            EProductToDocument(indexCoordinates, eProduct);
         }
+    }
+
+    private void EProductToDocument(IndexCoordinates indexCoordinates, EProduct eProduct) {
+        Document document = Document.create();
+        document.put("id", eProduct.getId());
+        document.put("name", eProduct.getProductName());
+        document.put("price", eProduct.getPrice());
+        document.put("country", eProduct.getCountry());
+        document.put("image", eProduct.getImage());
+        document.put("category", eProduct.getCategory());
+
+        elasticsearchOperations.save(document, indexCoordinates);
     }
 
     public List<EProduct> searchProductsByName(String name) {
@@ -57,5 +63,10 @@ public class ElasticsearchIndexService {
         return searchHits.getSearchHits().stream()
                 .map(hit -> hit.getContent())
                 .collect(Collectors.toList());
+    }
+
+    public void save(EProduct eProduct) {
+        IndexCoordinates indexCoordinates = IndexCoordinates.of("product");
+        EProductToDocument(indexCoordinates, eProduct);
     }
 }

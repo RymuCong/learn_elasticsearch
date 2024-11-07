@@ -1,7 +1,6 @@
 package com.arius.demo.dto;
 
 import com.arius.demo.entity.Category;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;

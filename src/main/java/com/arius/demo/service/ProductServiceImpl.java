@@ -18,10 +18,14 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final EProductRepository eProductRepository;
     private final S3Service s3Service;
+    private final ElasticsearchIndexService elasticsearchIndexService;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, EProductRepository eProductRepository, S3Service s3Service) {
+    public ProductServiceImpl(ProductRepository productRepository,
+                              EProductRepository eProductRepository,
+                              S3Service s3Service, ElasticsearchIndexService elasticsearchIndexService) {
         this.productRepository = productRepository;
+        this.elasticsearchIndexService = elasticsearchIndexService;
         this.eProductRepository = eProductRepository;
         this.s3Service = s3Service;
     }
@@ -42,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
     public void save(Product product) {
         productRepository.save(product);
         EProduct eProduct = ProductMapper.toEProduct(product);
-        eProductRepository.save(eProduct);
+        elasticsearchIndexService.save(eProduct);
     }
 
     @Override
@@ -52,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
             product.setImage(imageUrl);
             productRepository.save(product);
             EProduct eProduct = ProductMapper.toEProduct(product);
-            eProductRepository.save(eProduct);
+            elasticsearchIndexService.save(eProduct);
         } else {
             System.err.println("File upload failed: " + file.getOriginalFilename());
         }
@@ -68,7 +72,8 @@ public class ProductServiceImpl implements ProductService {
                 s3Service.deleteImage(fileName);
             }
             productRepository.deleteById(id);
-            eProductRepository.deleteById(id);
+        } else {
+            System.err.println("Product not found: " + id);
         }
     }
 

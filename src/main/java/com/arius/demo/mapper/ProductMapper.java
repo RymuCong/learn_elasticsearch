@@ -11,7 +11,7 @@ public class ProductMapper {
         }
 
         Product product = new Product();
-        product.setId(eProduct.getId());
+        product.setId(Integer.valueOf(eProduct.getId()));
         product.setProductName(eProduct.getProductName());
         product.setPrice(eProduct.getPrice());
         product.setCountry(eProduct.getCountry());
@@ -27,7 +27,7 @@ public class ProductMapper {
         }
 
         return new EProduct(
-                product.getId(),
+                String.valueOf(product.getId()),
                 product.getProductName(),
                 product.getPrice(),
                 product.getCountry(),

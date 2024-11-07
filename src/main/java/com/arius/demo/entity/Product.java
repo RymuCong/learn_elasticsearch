@@ -16,8 +16,9 @@ import lombok.NonNull;
 @Table(name = "product")
 public class Product {
 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @jakarta.persistence.Id
-    private String id;
+    private Integer id;
 
     @NonNull
     private String productName;
@@ -30,7 +31,7 @@ public class Product {
     @Column(length = 512)
     private String image;
 
-    @JsonManagedReference
+    @JsonBackReference
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "category_id")
     private Category category;
